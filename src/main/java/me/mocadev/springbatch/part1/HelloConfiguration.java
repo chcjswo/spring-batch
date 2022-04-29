@@ -31,6 +31,7 @@ public class HelloConfiguration {
 		return jobBuilderFactory.get("helloJob")
 			.incrementer(new RunIdIncrementer())
 			.start(this.helloStep())
+			.next(this.helloStep2())
 			.build();
 	}
 
@@ -39,6 +40,15 @@ public class HelloConfiguration {
 		return stepBuilderFactory.get("helloStep")
 			.tasklet(((contribution, chunkContext) -> {
 				log.info("hello spring batch");
+				return RepeatStatus.FINISHED;
+			})).build();
+	}
+
+	@Bean
+	public Step helloStep2() {
+		return stepBuilderFactory.get("helloStep")
+			.tasklet(((contribution, chunkContext) -> {
+				log.info("hello spring batch2");
 				return RepeatStatus.FINISHED;
 			})).build();
 	}
