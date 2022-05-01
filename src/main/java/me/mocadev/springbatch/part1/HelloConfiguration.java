@@ -46,9 +46,18 @@ public class HelloConfiguration {
 
 	@Bean
 	public Step helloStep2() {
-		return stepBuilderFactory.get("helloStep")
+		return stepBuilderFactory.get("helloStep2")
 			.tasklet(((contribution, chunkContext) -> {
 				log.info("hello spring batch2");
+				return RepeatStatus.FINISHED;
+			})).build();
+	}
+
+	@Bean
+	public Step helloStep3() {
+		return stepBuilderFactory.get("helloStep3")
+			.tasklet(((contribution, chunkContext) -> {
+				log.info("hello spring batch3");
 				return RepeatStatus.FINISHED;
 			})).build();
 	}
