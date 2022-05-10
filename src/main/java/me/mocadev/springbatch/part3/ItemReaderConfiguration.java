@@ -3,6 +3,7 @@ package me.mocadev.springbatch.part3;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.sql.DataSource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -11,6 +12,8 @@ import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.ItemWriter;
+import org.springframework.batch.item.database.JdbcCursorItemReader;
+import org.springframework.batch.item.database.builder.JdbcCursorItemReaderBuilder;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
@@ -33,6 +36,7 @@ public class ItemReaderConfiguration {
 
 	private final JobBuilderFactory jobBuilderFactory;
 	private final StepBuilderFactory stepBuilderFactory;
+	private final DataSource dataSource;
 
 	@Bean
 	public Job itemReaderJob() throws Exception {
@@ -40,6 +44,7 @@ public class ItemReaderConfiguration {
 			.incrementer(new RunIdIncrementer())
 			.start(this.customItemReaderStep())
 			.next(this.csvFileStep())
+			.next(this.jdbcStep())
 			.build();
 	}
 
@@ -59,10 +64,30 @@ public class ItemReaderConfiguration {
 			.writer(itemWriter())
 			.build();
 	}
+	@Bean
+	public Step jdbcStep() throws Exception {
+		return stepBuilderFactory.get("jdbcStep")
+			.<Person, Person>chunk(10)
+			.reader(this.jdbcCursorItemReader())
+			.writer(itemWriter())
+			.build();
+	}
+
+	private JdbcCursorItemReader<Person> jdbcCursorItemReader() throws Exception {
+		final JdbcCursorItemReader<Person> jdbcCursorItemReader = new JdbcCursorItemReaderBuilder<Person>()
+			.name("jdbcCursorItemReader")
+			.dataSource(dataSource)
+			.sql("select id, name, age, address from person")
+			.rowMapper(((rs, rowNum) -> new Person(rs.getInt(1), rs.getString(2), rs.getString(3),
+				rs.getString(4))))
+			.build();
+		jdbcCursorItemReader.afterPropertiesSet();
+		return jdbcCursorItemReader;
+	}
 
 	private ItemWriter<Person> itemWriter() {
 		return items -> log.info(items.stream()
-			.map(Person:: getName)
+			.map(Person::getName)
 			.collect(Collectors.joining(",")));
 	}
 
@@ -87,9 +112,11 @@ public class ItemReaderConfiguration {
 			.linesToSkip(1)
 			.lineMapper(lineMapper)
 			.build();
-		itemReader.afterPropertiesSet();;
+		itemReader.afterPropertiesSet();
+		;
 		return itemReader;
 	}
+
 	private List<Person> getItems() {
 		List<Person> items = new ArrayList<>();
 		for (int i = 0; i < 10; i++) {
