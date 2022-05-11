@@ -3,6 +3,7 @@ package me.mocadev.springbatch.part3;
 import io.micrometer.core.instrument.util.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +16,9 @@ import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
+import org.springframework.batch.item.database.JpaItemWriter;
 import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilder;
+import org.springframework.batch.item.database.builder.JpaItemWriterBuilder;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.FlatFileItemWriter;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
@@ -41,13 +44,15 @@ public class ItemWriterConfiguration {
 	private final JobBuilderFactory jobBuilderFactory;
 	private final StepBuilderFactory stepBuilderFactory;
 	private final DataSource dataSource;
+	private final EntityManagerFactory entityManagerFactory;
 
 	@Bean
 	public Job itemWriterJob() throws Exception {
 		return jobBuilderFactory.get("itemWriterJob")
 			.incrementer(new RunIdIncrementer())
 			.start(this.csvItemWriterStep())
-			.next(this.jdbcBatchItemWriterStep())
+//			.next(this.jdbcBatchItemWriterStep())
+			.next(this.jpaItemWriterStep())
 			.build();
 	}
 
@@ -67,6 +72,24 @@ public class ItemWriterConfiguration {
 			.reader(itemReader())
 			.writer(jdbcBatchItemWriter())
 			.build();
+	}
+
+	@Bean
+	public Step jpaItemWriterStep() throws Exception {
+		return stepBuilderFactory.get("jpaItemWriterStep")
+			.<Person, Person>chunk(10)
+			.reader(itemReader())
+			.writer(jpaItemWriter())
+			.build();
+	}
+
+	private ItemWriter<Person> jpaItemWriter() throws Exception {
+		final JpaItemWriter<Person> itemWriter = new JpaItemWriterBuilder<Person>()
+			.entityManagerFactory(entityManagerFactory)
+			.usePersist(true)
+			.build();
+		itemWriter.afterPropertiesSet();
+		return itemWriter;
 	}
 
 	private ItemWriter<Person> jdbcBatchItemWriter() {
@@ -106,7 +129,7 @@ public class ItemWriterConfiguration {
 	private List<Person> getItems() {
 		List<Person> items = new ArrayList<>();
 		for (int i = 0; i < 100; i++) {
-			items.add(new Person(i + 1, "test name " + i, "test age " + i, "test address " + i));
+			items.add(new Person("test name " + i, "test age " + i, "test address " + i));
 		}
 		return items;
 	}
