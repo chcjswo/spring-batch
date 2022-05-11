@@ -1,5 +1,6 @@
 package me.mocadev.springbatch.part3;
 
+import javax.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -10,10 +11,14 @@ import org.springframework.batch.core.configuration.annotation.StepBuilderFactor
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
+import org.springframework.batch.item.database.JpaItemWriter;
+import org.springframework.batch.item.database.builder.JpaItemWriterBuilder;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
+import org.springframework.batch.item.support.CompositeItemWriter;
+import org.springframework.batch.item.support.builder.CompositeItemWriterBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,6 +38,7 @@ public class SavePersonConfiguration {
 
 	private final JobBuilderFactory jobBuilderFactory;
 	private final StepBuilderFactory stepBuilderFactory;
+	private final EntityManagerFactory entityManagerFactory;
 
 	@Bean
 	public Job savePersonJob() throws Exception {
@@ -53,8 +59,17 @@ public class SavePersonConfiguration {
 			.build();
 	}
 
-	private ItemWriter<? super Person> itemWriter() {
-		return items -> items.forEach(x -> log.info("저는 {} 입니다.", x.getName()));
+	private ItemWriter<? super Person> itemWriter() throws Exception {
+		final JpaItemWriter<Person> jpaItemWriter = new JpaItemWriterBuilder<Person>()
+			.entityManagerFactory(entityManagerFactory)
+			.build();
+		final ItemWriter<Person> logItemWriter = items -> log.info("person.size: {}", items.size());
+
+		final CompositeItemWriter<Person> itemWriter = new CompositeItemWriterBuilder<Person>()
+			.delegates(jpaItemWriter, logItemWriter)
+			.build();
+		itemWriter.afterPropertiesSet();
+		return itemWriter;
 	}
 
 	private ItemReader<? extends Person> itemReader() throws Exception {
