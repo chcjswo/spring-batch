@@ -3,6 +3,7 @@ package me.mocadev.springbatch.part3;
 import javax.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.mocadev.springbatch.part3.SavePersonListener.SavePersonAnnotationJobExecutionListener;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
@@ -45,6 +46,8 @@ public class SavePersonConfiguration {
 		return jobBuilderFactory.get("savePersonJob")
 			.incrementer(new RunIdIncrementer())
 			.start(this.savePersonStep(null))
+			.listener(new SavePersonListener.SavePersonJobExecutionListener())
+			.listener(new SavePersonAnnotationJobExecutionListener())
 			.build();
 	}
 
@@ -56,6 +59,7 @@ public class SavePersonConfiguration {
 			.reader(itemReader())
 			.processor(new DuplicateValidationProcessor<>(Person::getName, Boolean.parseBoolean(allowDuplicate)))
 			.writer(itemWriter())
+			.listener(new SavePersonListener.SavePersonStepExecutionListener())
 			.build();
 	}
 
