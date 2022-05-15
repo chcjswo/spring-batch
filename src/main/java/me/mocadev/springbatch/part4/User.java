@@ -14,6 +14,7 @@ import javax.persistence.OneToMany;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import me.mocadev.springbatch.part5.Orders;
 
 /**
  * @author chcjswo

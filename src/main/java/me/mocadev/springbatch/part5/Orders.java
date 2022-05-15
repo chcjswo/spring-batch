@@ -1,4 +1,4 @@
-package me.mocadev.springbatch.part4;
+package me.mocadev.springbatch.part5;
 
 import java.time.LocalDate;
 import javax.persistence.Entity;

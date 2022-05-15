@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.mocadev.springbatch.part5.Orders;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
@@ -37,26 +38,26 @@ public class SaveUserTaskLet implements Tasklet {
 
 	private List<User> createUsers() {
 		List<User> users = new ArrayList<>();
-		userIteration(0, 100, users, 1_000);
-		userIteration(100, 200, users, 200_000);
-		userIteration(200, 300, users, 300_000);
-		userIteration(300, 400, users, 500_000);
+		userIteration(0, 100, users, 1_000, LocalDate.of(2022, 5, 15));
+		userIteration(100, 200, users, 200_000, LocalDate.of(2022, 5, 16));
+		userIteration(200, 300, users, 300_000, LocalDate.of(2022, 5, 17));
+		userIteration(300, 400, users, 500_000, LocalDate.of(2022, 5, 18));
 		return users;
 	}
 
-	private void userIteration(int index, int length, List<User> users, int amount) {
+	private void userIteration(int index, int length, List<User> users, int amount, LocalDate date) {
 		for (int i = index; i < length; i++) {
-			makeUsers(users, amount, i);
+			makeUsers(users, amount, i, date);
 		}
 	}
 
-	private void makeUsers(List<User> users, int amount, int i) {
+	private void makeUsers(List<User> users, int amount, int i, LocalDate date) {
 		users.add(User.builder()
 			.username("test username " + i)
 			.orders(Collections.singletonList(Orders.builder()
 				.amount(amount)
 				.itemName("item name " + i)
-				.createdDate(LocalDate.of(2022, 5, 15))
+				.createdDate(date)
 				.build()))
 			.build());
 	}
