@@ -9,6 +9,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.mocadev.springbatch.part5.JobParametersDecide;
 import me.mocadev.springbatch.part5.OrderStatistics;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -58,8 +59,11 @@ public class UserConfiguration {
 			.incrementer(new RunIdIncrementer())
 			.start(this.saveUserStep())
 			.next(this.userLevelUpStep())
-			.next(this.orderStatisticsStep(null))
 			.listener(new LevelUpJobExecutionListener(userRepository))
+			.next(new JobParametersDecide("date"))
+			.on(JobParametersDecide.CONTINUE.getName())
+			.to(this.orderStatisticsStep(null))
+			.build()
 			.build();
 	}
 
