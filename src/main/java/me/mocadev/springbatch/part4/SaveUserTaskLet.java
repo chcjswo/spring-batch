@@ -1,5 +1,6 @@
 package me.mocadev.springbatch.part4;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -22,10 +23,10 @@ import org.springframework.batch.repeat.RepeatStatus;
 public class SaveUserTaskLet implements Tasklet {
 
 	private final UserRepository userRepository;
+	private final int SIZE = 100;
 
 	@Override
-	public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext)
-		throws Exception {
+	public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) {
 		List<User> users = createUsers();
 
 		Collections.shuffle(users);
@@ -43,16 +44,20 @@ public class SaveUserTaskLet implements Tasklet {
 		return users;
 	}
 
-	private void userIteration(int index, int length, List<User> users, int totalAmount) {
+	private void userIteration(int index, int length, List<User> users, int amount) {
 		for (int i = index; i < length; i++) {
-			makeUsers(users, totalAmount, i);
+			makeUsers(users, amount, i);
 		}
 	}
 
-	private void makeUsers(List<User> users, int totalAmount, int i) {
+	private void makeUsers(List<User> users, int amount, int i) {
 		users.add(User.builder()
-			.totalAmount(totalAmount)
 			.username("test username " + i)
+			.orders(Collections.singletonList(Orders.builder()
+				.amount(amount)
+				.itemName("item name " + i)
+				.createdDate(LocalDate.of(2022, 5, 15))
+				.build()))
 			.build());
 	}
 }
