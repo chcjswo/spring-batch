@@ -24,7 +24,7 @@ import org.springframework.batch.repeat.RepeatStatus;
 public class SaveUserTaskLet implements Tasklet {
 
 	private final UserRepository userRepository;
-	private final int SIZE = 100;
+	private final int SIZE = 10_000;
 
 	@Override
 	public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) {
@@ -38,10 +38,10 @@ public class SaveUserTaskLet implements Tasklet {
 
 	private List<User> createUsers() {
 		List<User> users = new ArrayList<>();
-		userIteration(0, 100, users, 1_000, LocalDate.of(2022, 5, 15));
-		userIteration(100, 200, users, 200_000, LocalDate.of(2022, 5, 16));
-		userIteration(200, 300, users, 300_000, LocalDate.of(2022, 5, 17));
-		userIteration(300, 400, users, 500_000, LocalDate.of(2022, 5, 18));
+		userIteration(0, SIZE, users, 1_000, LocalDate.of(2022, 5, 15));
+		userIteration(SIZE, SIZE * 2, users, 200_000, LocalDate.of(2022, 5, 16));
+		userIteration(SIZE * 2, SIZE * 3, users, 300_000, LocalDate.of(2022, 5, 17));
+		userIteration(SIZE * 3, SIZE * 4, users, 500_000, LocalDate.of(2022, 5, 18));
 		return users;
 	}
 
