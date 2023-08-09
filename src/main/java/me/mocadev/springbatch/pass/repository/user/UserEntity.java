@@ -1,4 +1,4 @@
-package me.mocadev.springbatch.repository.user;
+package me.mocadev.springbatch.pass.repository.user;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -10,7 +10,7 @@ import com.vladmihalcea.hibernate.type.json.JsonStringType;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import me.mocadev.springbatch.repository.BaseEntity;
+import me.mocadev.springbatch.pass.repository.BaseEntity;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 

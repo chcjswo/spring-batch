@@ -1,4 +1,4 @@
-package me.mocadev.springbatch.repository.pass;
+package me.mocadev.springbatch.pass.repository.pass;
 
 public enum PassStatus {
 	READY, PROGRESSED, EXPIRED

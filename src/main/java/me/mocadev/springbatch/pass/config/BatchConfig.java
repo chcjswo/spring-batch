@@ -1,4 +1,4 @@
-package me.mocadev.springbatch.config;
+package me.mocadev.springbatch.pass.config;
 
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.context.annotation.Configuration;

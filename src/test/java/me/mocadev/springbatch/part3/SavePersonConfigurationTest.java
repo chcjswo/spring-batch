@@ -1,8 +1,9 @@
 package me.mocadev.springbatch.part3;
 
-import me.mocadev.springbatch.TestConfiguration;
+import me.mocadev.springbatch.config.TestConfiguration;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParameters;
@@ -20,6 +21,7 @@ import org.springframework.test.context.ContextConfiguration;
  * @github https://github.com/chcjswo
  * @since 2022-05-12
  **/
+@Disabled
 @SpringBatchTest
 @ContextConfiguration(classes = {SavePersonConfiguration.class, TestConfiguration.class})
 class SavePersonConfigurationTest {

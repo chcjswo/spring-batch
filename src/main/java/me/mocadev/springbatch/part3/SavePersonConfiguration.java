@@ -61,7 +61,6 @@ public class SavePersonConfiguration {
 		return stepBuilderFactory.get("savePersonStep")
 			.<Person, Person>chunk(10)
 			.reader(itemReader())
-//			.processor(new DuplicateValidationProcessor<>(Person::getName, Boolean.parseBoolean(allowDuplicate)))
 			.processor(itemProcessor(null))
 			.writer(itemWriter())
 			.listener(new SavePersonListener.SavePersonStepExecutionListener())

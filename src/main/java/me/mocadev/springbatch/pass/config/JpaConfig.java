@@ -1,4 +1,4 @@
-package me.mocadev.springbatch.config;
+package me.mocadev.springbatch.pass.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;

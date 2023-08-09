@@ -1,4 +1,4 @@
-package me.mocadev.springbatch.repository;
+package me.mocadev.springbatch.pass.repository;
 
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;

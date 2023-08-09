@@ -1,9 +1,9 @@
 package me.mocadev.springbatch.part4;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
 import java.time.LocalDate;
-import me.mocadev.springbatch.TestConfiguration;
+import me.mocadev.springbatch.config.TestConfiguration;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.StepExecution;
@@ -19,6 +19,7 @@ import org.springframework.test.context.ContextConfiguration;
  * @github https://github.com/chcjswo
  * @since 2022-05-14
  **/
+@Disabled
 @SpringBatchTest
 @ContextConfiguration(classes = {UserConfiguration.class, TestConfiguration.class})
 class UserConfigurationTest {

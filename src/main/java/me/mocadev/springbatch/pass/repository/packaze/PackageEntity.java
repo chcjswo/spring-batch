@@ -1,4 +1,4 @@
-package me.mocadev.springbatch.repository.packaze;
+package me.mocadev.springbatch.pass.repository.packaze;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,7 +8,7 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import me.mocadev.springbatch.repository.BaseEntity;
+import me.mocadev.springbatch.pass.repository.BaseEntity;
 
 @Getter
 @Setter
