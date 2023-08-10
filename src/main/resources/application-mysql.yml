@@ -16,3 +16,7 @@ spring:
 logging:
     level:
         org.hibernate.type.descriptor.sql: debug
+
+kakaotalk:
+    host: https://kapi.kakao.com
+    token: YOUR_ACCESS_TOKEN
