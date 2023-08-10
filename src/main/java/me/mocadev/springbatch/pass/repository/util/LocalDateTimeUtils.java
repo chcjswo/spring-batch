@@ -8,6 +8,10 @@ import org.apache.commons.lang3.StringUtils;
 
 public class LocalDateTimeUtils {
 
+	private LocalDateTimeUtils() {
+		throw new IllegalStateException("Utility class");
+	}
+
 	public static final DateTimeFormatter YYYY_MM_DD_HH_MM = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 	public static final DateTimeFormatter YYYY_MM_DD = DateTimeFormatter.ofPattern("yyyyMMdd");
 
