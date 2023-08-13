@@ -23,7 +23,7 @@ import org.springframework.batch.repeat.RepeatStatus;
 @RequiredArgsConstructor
 public class SaveUserTaskLet implements Tasklet {
 
-	private final UserRepository userRepository;
+	private final UsersRepository usersRepository;
 	private final int SIZE = 10_000;
 
 	@Override
@@ -31,7 +31,7 @@ public class SaveUserTaskLet implements Tasklet {
 		List<User> users = createUsers();
 
 		Collections.shuffle(users);
-		userRepository.saveAll(users);
+		usersRepository.saveAll(users);
 
 		return RepeatStatus.FINISHED;
 	}

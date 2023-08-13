@@ -1,18 +1,18 @@
 package me.mocadev.springbatch.part6;
 
+import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
-import javax.persistence.EntityManagerFactory;
-import javax.sql.DataSource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.mocadev.springbatch.part4.LevelUpJobExecutionListener;
 import me.mocadev.springbatch.part4.SaveUserTaskLet;
 import me.mocadev.springbatch.part4.User;
-import me.mocadev.springbatch.part4.UserRepository;
+import me.mocadev.springbatch.part4.UsersRepository;
 import me.mocadev.springbatch.part5.JobParametersDecide;
 import me.mocadev.springbatch.part5.OrderStatistics;
 import org.springframework.batch.core.Job;
@@ -55,7 +55,7 @@ public class MultiThreadUserConfiguration {
 	private final int CHUNK_SIZE = 1000;
 	private final JobBuilderFactory jobBuilderFactory;
 	private final StepBuilderFactory stepBuilderFactory;
-	private final UserRepository userRepository;
+	private final UsersRepository usersRepository;
 	private final EntityManagerFactory entityManagerFactory;
 	private final DataSource dataSource;
 	private final TaskExecutor taskExecutor;
@@ -66,7 +66,7 @@ public class MultiThreadUserConfiguration {
 			.incrementer(new RunIdIncrementer())
 			.start(this.saveUserStep())
 			.next(this.userLevelUpStep())
-			.listener(new LevelUpJobExecutionListener(userRepository))
+			.listener(new LevelUpJobExecutionListener(usersRepository))
 			.next(new JobParametersDecide("date"))
 			.on(JobParametersDecide.CONTINUE.getName())
 			.to(this.orderStatisticsStep(null))
@@ -77,7 +77,7 @@ public class MultiThreadUserConfiguration {
 	@Bean(JOB_NAME + "_saveUserStep")
 	public Step saveUserStep() {
 		return stepBuilderFactory.get(JOB_NAME + "_saveUserStep")
-			.tasklet(new SaveUserTaskLet(userRepository))
+			.tasklet(new SaveUserTaskLet(usersRepository))
 			.build();
 	}
 
@@ -158,7 +158,7 @@ public class MultiThreadUserConfiguration {
 	private ItemWriter<? super User> itemWriter() {
 		return users -> users.forEach(x -> {
 			x.levelUp();
-			userRepository.save(x);
+			usersRepository.save(x);
 		});
 	}
 

@@ -28,13 +28,13 @@ class UserConfigurationTest {
 	private JobLauncherTestUtils jobLauncherTestUtils;
 
 	@Autowired
-	private UserRepository userRepository;
+	private UsersRepository usersRepository;
 
 	@Test
 	void test1() throws Exception {
 		final JobExecution jobExecution = jobLauncherTestUtils.launchJob();
 
-		int size = userRepository.findAllByUpdatedDate(LocalDate.now()).size();
+		int size = usersRepository.findAllByUpdatedDate(LocalDate.now()).size();
 
 		assertThat(jobExecution.getStepExecutions().stream()
 			.filter(x -> x.getStepName().equals("userLevelUpStep"))
@@ -43,7 +43,7 @@ class UserConfigurationTest {
 			.isEqualTo(size)
 			.isEqualTo(300);
 
-		assertThat(userRepository.count())
+		assertThat(usersRepository.count())
 			.isEqualTo(400);
 	}
 

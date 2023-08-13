@@ -12,7 +12,7 @@ import org.springframework.data.jpa.repository.Query;
  * @github https://github.com/chcjswo
  * @since 2022-05-14
  **/
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UsersRepository extends JpaRepository<User, Long> {
 
 	Collection<User> findAllByUpdatedDate(LocalDate updatedDate);
 

@@ -3,7 +3,7 @@ package me.mocadev.springbatch.part6;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
-import me.mocadev.springbatch.part4.UserRepository;
+import me.mocadev.springbatch.part4.UsersRepository;
 import org.springframework.batch.core.partition.support.Partitioner;
 import org.springframework.batch.item.ExecutionContext;
 
@@ -17,12 +17,12 @@ import org.springframework.batch.item.ExecutionContext;
 @RequiredArgsConstructor
 public class UserLevelUpPartitioner implements Partitioner {
 
-	private final UserRepository userRepository;
+	private final UsersRepository usersRepository;
 
 	@Override
 	public Map<String, ExecutionContext> partition(int gridSize) {
-		long minId = userRepository.findMinId();
-		long maxId = userRepository.findMaxId();
+		long minId = usersRepository.findMinId();
+		long maxId = usersRepository.findMaxId();
 		long targetSize = (maxId - minId) / gridSize + 1;
 
 		Map<String, ExecutionContext> result = new HashMap<>();

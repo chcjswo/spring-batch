@@ -18,7 +18,7 @@ import org.springframework.batch.core.JobExecutionListener;
 @RequiredArgsConstructor
 public class LevelUpJobExecutionListener implements JobExecutionListener {
 
-	private final UserRepository userRepository;
+	private final UsersRepository usersRepository;
 
 	@Override
 	public void beforeJob(JobExecution jobExecution) {
@@ -27,7 +27,7 @@ public class LevelUpJobExecutionListener implements JobExecutionListener {
 
 	@Override
 	public void afterJob(JobExecution jobExecution) {
-		final Collection<User> users = userRepository.findAllByUpdatedDate(LocalDate.now());
+		final Collection<User> users = usersRepository.findAllByUpdatedDate(LocalDate.now());
 
 		final long time = jobExecution.getEndTime().getTime() - jobExecution.getStartTime().getTime();
 		log.info("회원 등급 업데이트 배치 프로그램");
