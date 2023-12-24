@@ -32,6 +32,7 @@ public class HelloConfiguration {
 			.incrementer(new RunIdIncrementer())
 			.start(this.helloStep())
 			.next(this.helloStep2())
+			.next(this.helloStep3())
 			.build();
 	}
 
