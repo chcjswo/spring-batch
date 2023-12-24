@@ -36,3 +36,4 @@ output/
 
 ### VS Code ###
 .vscode/
+/src/main/generated/
