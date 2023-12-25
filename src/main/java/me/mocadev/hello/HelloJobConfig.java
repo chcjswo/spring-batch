@@ -23,7 +23,7 @@ public class HelloJobConfig {
 
 	@Bean
 	public Job helloJob() {
-		return jobBuilderFactory.get("helloworldJob")
+		return jobBuilderFactory.get("helloworldJob2")
 			.incrementer(new RunIdIncrementer())
 			.start(helloStep())
 			.build();
@@ -32,7 +32,7 @@ public class HelloJobConfig {
 	@JobScope
 	@Bean
 	public Step helloStep() {
-		return stepBuilderFactory.get("helloworldStep")
+		return stepBuilderFactory.get("helloworldStep2")
 			.tasklet(helloTasklet())
 			.build();
 	}

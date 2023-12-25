@@ -4,8 +4,7 @@ server:
 spring:
     batch:
         job:
-            names: ${job.name:itemWriterJob}
-#            names: ${job.name:NONE}
+            names: ${job.name:NONE}
     datasource:
         driver-class-name: org.h2.Driver
     sql:

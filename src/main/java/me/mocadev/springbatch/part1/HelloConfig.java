@@ -21,23 +21,23 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @Slf4j
 @RequiredArgsConstructor
-public class HelloConfiguration {
+public class HelloConfig {
 
 	private final JobBuilderFactory jobBuilderFactory;
 	private final StepBuilderFactory stepBuilderFactory;
 
 	@Bean
-	public Job helloJob() {
-		return jobBuilderFactory.get("helloJob222")
+	public Job helloJob2() {
+		return jobBuilderFactory.get("helloworldJob")
 			.incrementer(new RunIdIncrementer())
-			.start(this.helloStep())
-			.next(this.helloStep2())
-			.next(this.helloStep3())
+			.start(this.helloStep11())
+			.next(this.helloStep22())
+			.next(this.helloStep33())
 			.build();
 	}
 
 	@Bean
-	public Step helloStep() {
+	public Step helloStep11() {
 		return stepBuilderFactory.get("helloStep")
 			.tasklet(((contribution, chunkContext) -> {
 				log.info("hello spring batch");
@@ -46,7 +46,7 @@ public class HelloConfiguration {
 	}
 
 	@Bean
-	public Step helloStep2() {
+	public Step helloStep22() {
 		return stepBuilderFactory.get("helloStep2")
 			.tasklet(((contribution, chunkContext) -> {
 				log.info("hello spring batch2");
@@ -55,7 +55,7 @@ public class HelloConfiguration {
 	}
 
 	@Bean
-	public Step helloStep3() {
+	public Step helloStep33() {
 		return stepBuilderFactory.get("helloStep3")
 			.tasklet(((contribution, chunkContext) -> {
 				log.info("hello spring batch3");

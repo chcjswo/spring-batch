@@ -14,7 +14,7 @@ spring:
         show-sql: true
     batch:
         job:
-            names: ${job.name:helloJob}
+            names: ${job.name:NONE}
         jdbc:
             initialize-schema: always
 
